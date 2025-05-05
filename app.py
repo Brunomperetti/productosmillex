@@ -53,7 +53,6 @@ def cargar_productos_desde_drive():
             
             # Eliminar el archivo temporal
             os.remove(temp_file)
-            st.success(f"✅ Se cargaron {len(productos)} productos desde Google Drive.")
             return productos
         else:
             return []
