@@ -5,53 +5,67 @@ import re
 import json
 import os
 import urllib.parse
+import gdown
 
 st.set_page_config(page_title="Productos para Mascotas", layout="wide")
 
 # --- CONFIG ---
 PRODUCTOS_FILE = "productos.json"
-LOCAL_EXCEL_FILE = "Nuevo_ingreso_ordenado.xlsx"
+GOOGLE_DRIVE_URL = "https://docs.google.com/spreadsheets/d/1s6WswhgEg_ICoQRcr5ZI3H4MMh0_rW1M/edit?usp=sharing"
 WHATSAPP_PHONE_NUMBER = "5493516507867"
 
 # --- Funciones para cargar productos ---
-def cargar_productos_local(local_file):
-    """Carga los productos desde un archivo CSV/Excel local."""
-    if not os.path.exists(local_file):
-        st.warning(f"⚠️ El archivo local '{local_file}' no se encontró.")
-        return []
+def descargar_archivo_drive(url, output):
+    """Descarga un archivo de Google Drive usando gdown"""
     try:
-        try:
-            df = pd.read_csv(local_file, encoding='utf-8')
-        except pd.errors.ParserError:
-            df = pd.read_excel(local_file)
-
-        productos = []
-        for index, row in df.iterrows():
-            codigo_alfa = row.get("COD_ALFA")
-            detalle = row.get("DETALLE", "")
-            precio = row.get("PRECIO")
-            stock = row.get("STOCK")
-            imagen = row.get("Link")
-
-            if detalle and pd.notna(precio) and pd.notna(stock):
-                productos.append({
-                    "nombre": str(detalle).strip(),
-                    "precio": float(precio),
-                    "stock": int(stock) if pd.notna(stock) else 0,
-                    "codigo": str(codigo_alfa).strip() if pd.notna(codigo_alfa) else "",
-                    "imagen": str(imagen).strip() if pd.notna(imagen) else None
-                })
-        st.success(f"✅ Se cargaron {len(productos)} productos desde '{local_file}'.")
-        return productos
+        file_id = url.split('/d/')[1].split('/')[0]
+        download_url = f'https://drive.google.com/uc?id={file_id}'
+        gdown.download(download_url, output, quiet=False)
+        return True
     except Exception as e:
-        st.error(f"⚠️ Error al cargar el archivo local '{local_file}': {e}")
+        st.error(f"Error al descargar el archivo: {e}")
+        return False
+
+def cargar_productos_desde_drive():
+    """Carga los productos desde Google Drive"""
+    try:
+        # Descargar el archivo temporalmente
+        temp_file = "temp_productos.xlsx"
+        if descargar_archivo_drive(GOOGLE_DRIVE_URL, temp_file):
+            df = pd.read_excel(temp_file)
+            productos = []
+            
+            for index, row in df.iterrows():
+                codigo_alfa = row.get("COD_ALFA")
+                detalle = row.get("DETALLE", "")
+                precio = row.get("PRECIO")
+                stock = row.get("STOCK")
+                imagen = row.get("Link")
+
+                if detalle and pd.notna(precio) and pd.notna(stock):
+                    productos.append({
+                        "nombre": str(detalle).strip(),
+                        "precio": float(precio),
+                        "stock": int(stock) if pd.notna(stock) else 0,
+                        "codigo": str(codigo_alfa).strip() if pd.notna(codigo_alfa) else "",
+                        "imagen": str(imagen).strip() if pd.notna(imagen) else None
+                    })
+            
+            # Eliminar el archivo temporal
+            os.remove(temp_file)
+            st.success(f"✅ Se cargaron {len(productos)} productos desde Google Drive.")
+            return productos
+        else:
+            return []
+    except Exception as e:
+        st.error(f"⚠️ Error al cargar el archivo desde Google Drive: {e}")
         return []
 
 # --- SESSION STATE ---
 if 'productos' not in st.session_state:
-    st.session_state.productos = cargar_productos_local(LOCAL_EXCEL_FILE)
+    st.session_state.productos = cargar_productos_desde_drive()
 elif not st.session_state.productos:
-    st.session_state.productos = cargar_productos_local(LOCAL_EXCEL_FILE)
+    st.session_state.productos = cargar_productos_desde_drive()
 
 st.title("Promociones Millex")
 
@@ -157,12 +171,16 @@ else:
         st.markdown("---")
 
         st.markdown("### 🧾 Tus datos para el pedido:")
+        razon_social = st.text_input("🏢 Razón Social *")
+        cuit = st.text_input("🔢 CUIT *")
         nombre_cliente = st.text_input("🧍 Nombre de Contacto *")
         email_cliente = st.text_input("📧 Email de Contacto *")
         direccion_cliente = st.text_area("📍 Dirección de Entrega")
         st.markdown("<span style='font-size: 0.8em; color: gray;'>* Campos obligatorios</span>", unsafe_allow_html=True)
 
-        if nombre_cliente and email_cliente:
+        if razon_social and cuit and nombre_cliente and email_cliente:
+            pedido_texto += f"\nRazón Social: {razon_social}"
+            pedido_texto += f"\nCUIT: {cuit}"
             pedido_texto += f"\nNombre: {nombre_cliente}"
             pedido_texto += f"\nEmail: {email_cliente}"
             if direccion_cliente:
@@ -176,6 +194,6 @@ else:
                     unsafe_allow_html=True
                 )
         else:
-            st.warning("⚠️ Por favor, ingresa tu nombre y email para poder generar el mensaje de pedido.")
+            st.warning("⚠️ Por favor, completa todos los campos obligatorios (Razón Social, CUIT, Nombre y Email) para poder generar el mensaje de pedido.")
     else:
         st.info("Seleccioná la cantidad de los productos que deseas comprar.")
