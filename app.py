@@ -1,21 +1,4 @@
 import streamlit as st
-
-hide_streamlit_style = """
-            <style>
-            [data-testid="stDecoration"] {
-                visibility: hidden;
-                height: 0;
-            }
-            </style>
-            """
-st.markdown(hide_streamlit_style, unsafe_allow_html=True)
-
-# El resto de tu aplicación de Streamlit
-st.title("Mi increíble aplicación")
-st.write("¡Contenido de la aplicación aquí!")
-
-
-import streamlit as st
 import pandas as pd
 from io import BytesIO
 import re
