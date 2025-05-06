@@ -1,14 +1,14 @@
 import streamlit as st
 from PIL import Image
 
-# 👉 Esta línea tiene que ser la PRIMERA configuración visible
+# 👇 ESTA LÍNEA TIENE QUE ESTAR AL TOQUE DEL ARRANQUE
 st.set_page_config(
     page_title="Productos para Mascotas",
     page_icon="logo.png",
     layout="wide"
 )
 
-# Ahora sí, podés empezar a mostrar cosas
+# Recién ahora podés empezar a mostrar cosas
 col1, col2 = st.columns([1, 5])
 with col1:
     st.image("logo.png", width=80)
@@ -16,7 +16,7 @@ with col2:
     st.markdown("<h1 style='margin-bottom: 0;'>Millex</h1>", unsafe_allow_html=True)
     st.markdown("Plataforma de gestión personalizada", unsafe_allow_html=True)
 
-# Ocultar branding de Streamlit
+# Estilo para ocultar el branding de Streamlit
 hide_streamlit_style = """
     <style>
     #MainMenu {visibility: hidden;}
@@ -25,6 +25,7 @@ hide_streamlit_style = """
     </style>
 """
 st.markdown(hide_streamlit_style, unsafe_allow_html=True)
+
 
 
 import streamlit as st
