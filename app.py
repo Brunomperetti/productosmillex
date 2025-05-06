@@ -1,4 +1,16 @@
 import streamlit as st
+
+# Código para ocultar el menú de hamburguesa, el header y el footer
+hide_streamlit_style = """
+    <style>
+    #MainMenu {visibility: hidden;}
+    footer {visibility: hidden;}
+    header {visibility: hidden;}
+    </style>
+    """
+st.markdown(hide_streamlit_style, unsafe_allow_html=True)
+
+import streamlit as st
 import pandas as pd
 from io import BytesIO
 import re
