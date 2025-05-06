@@ -1,4 +1,32 @@
 import streamlit as st
+from PIL import Image
+
+# Configurar la pestaña del navegador
+st.set_page_config(
+    page_title="Millex App",
+    page_icon="logo.png",  # Usamos el logo que subiste
+    layout="wide"
+)
+
+# Mostrar el logo y el título
+col1, col2 = st.columns([1, 5])
+with col1:
+    st.image("logo.png", width=80)  # Ajustá el tamaño si querés
+with col2:
+    st.markdown("<h1 style='margin-bottom: 0;'>Millex</h1>", unsafe_allow_html=True)
+    st.markdown("Plataforma de gestión personalizada", unsafe_allow_html=True)
+
+hide_streamlit_style = """
+    <style>
+    #MainMenu {visibility: hidden;}
+    footer {visibility: hidden;}
+    .css-18e3th9 {visibility: hidden;}
+    </style>
+"""
+st.markdown(hide_streamlit_style, unsafe_allow_html=True)
+
+
+import streamlit as st
 import pandas as pd
 from io import BytesIO
 import re
