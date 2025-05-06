@@ -1,34 +1,4 @@
 import streamlit as st
-from PIL import Image
-
-# Asegurate de que esta línea esté en la primera posición después de los imports
-st.set_page_config(
-    page_title="Productos para Mascotas",
-    page_icon="logo.png",
-    layout="wide"
-)
-
-# Ahora podés mostrar el contenido de tu app
-col1, col2 = st.columns([1, 5])
-with col1:
-    st.image("logo.png", width=80)
-with col2:
-    st.markdown("<h1 style='margin-bottom: 0;'>Millex</h1>", unsafe_allow_html=True)
-    st.markdown("Plataforma de gestión personalizada", unsafe_allow_html=True)
-
-# Estilo para ocultar el branding de Streamlit
-hide_streamlit_style = """
-    <style>
-    #MainMenu {visibility: hidden;}
-    footer {visibility: hidden;}
-    .css-18e3th9 {visibility: hidden;}
-    </style>
-"""
-st.markdown(hide_streamlit_style, unsafe_allow_html=True)
-
-
-
-import streamlit as st
 import pandas as pd
 from io import BytesIO
 import re
