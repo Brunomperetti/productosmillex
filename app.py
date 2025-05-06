@@ -1,21 +1,22 @@
 import streamlit as st
 from PIL import Image
 
-# Configurar la pestaña del navegador
+# 👉 Esta línea tiene que ser la PRIMERA configuración visible
 st.set_page_config(
-    page_title="Millex App",
-    page_icon="logo.png",  # Usamos el logo que subiste
+    page_title="Productos para Mascotas",
+    page_icon="logo.png",
     layout="wide"
 )
 
-# Mostrar el logo y el título
+# Ahora sí, podés empezar a mostrar cosas
 col1, col2 = st.columns([1, 5])
 with col1:
-    st.image("logo.png", width=80)  # Ajustá el tamaño si querés
+    st.image("logo.png", width=80)
 with col2:
     st.markdown("<h1 style='margin-bottom: 0;'>Millex</h1>", unsafe_allow_html=True)
     st.markdown("Plataforma de gestión personalizada", unsafe_allow_html=True)
 
+# Ocultar branding de Streamlit
 hide_streamlit_style = """
     <style>
     #MainMenu {visibility: hidden;}
