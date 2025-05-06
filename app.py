@@ -1,14 +1,14 @@
 import streamlit as st
 from PIL import Image
 
-# 👇 ESTA LÍNEA TIENE QUE ESTAR AL TOQUE DEL ARRANQUE
+# Asegurate de que esta línea esté en la primera posición después de los imports
 st.set_page_config(
     page_title="Productos para Mascotas",
     page_icon="logo.png",
     layout="wide"
 )
 
-# Recién ahora podés empezar a mostrar cosas
+# Ahora podés mostrar el contenido de tu app
 col1, col2 = st.columns([1, 5])
 with col1:
     st.image("logo.png", width=80)
